@@ -1,10 +1,13 @@
+import { Button, Grid, Typography } from '@material-ui/core'
 import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 
 export const SessionStep = props => {
   const { sessionId, stepId } = useParams()
   const [details, setDetails] = useState()
+
+  const history = useHistory()
 
   useEffect(() => {
     const getData = async () => {
@@ -16,6 +19,16 @@ export const SessionStep = props => {
     return getData()
   }, [stepId])
 
+  const markStepExecuted = async () => {
+    await fetch(
+      `http://localhost:8080/sessions/${sessionId}/${stepId}`,
+      {
+        method: 'PUT'
+      }
+    )
+    history.push(`/session/${sessionId}`)
+  }
+
   if (!details || !details.markdown) {
     return (
       <>
@@ -25,8 +38,18 @@ export const SessionStep = props => {
   }
 
   return (
-    <>
-      <ReactMarkdown children={details.markdown} />
-    </>
+    <Grid container direction='column'>
+      <Grid item>
+        <Typography variant='h3'>{details.summary}</Typography>
+      </Grid>
+      <Grid item>
+        <ReactMarkdown children={details.markdown} />
+      </Grid>
+      <Grid item>
+        <Button variant='contained' color='primary' onClick={markStepExecuted}>
+          Mark step executed
+        </Button>
+      </Grid>
+    </Grid>
   )
 }
