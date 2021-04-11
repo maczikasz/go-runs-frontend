@@ -1,5 +1,12 @@
-import React from 'react'
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  Link,
+  useHistory,
+  useLocation
+} from 'react-router-dom'
 import { Rules } from './features/rules/rules'
 import { Session } from './features/sessions/session'
 import { SessionStep } from './features/sessions/steps'
@@ -21,8 +28,53 @@ import SearchIcon from '@material-ui/icons/Search'
 import MenuBookIcon from '@material-ui/icons/MenuBook'
 import SlideshowIcon from '@material-ui/icons/Slideshow'
 import { Runbooks } from './features/runbooks/runbooks'
+import { Login } from './features/login/login'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectToken } from './features/login/login_slice'
+import { Button } from '@material-ui/core'
+import { selectUserinfo, setUserinfo } from './features/login/user_slice'
 
 function App () {
+  const token = useSelector(selectToken)
+  console.log(token)
+
+  const userInfo = useSelector(selectUserinfo)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const user_resp = await fetch('http://localhost:8089/user', {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`
+        }
+      })
+
+      const user_data = await user_resp.json()
+
+      console.log(user_data)
+      dispatch(setUserinfo(user_data))
+    }
+
+    if (token) return fetchUserInfo()
+  }, [token])
+
+  if (!token || !userInfo) {
+    return (
+      <div className='App'>
+        <Login />
+      </div>
+    )
+  } else {
+    console.log('asdfsaf')
+    return (
+      <div className='App'>
+        <RunbookManagerApp />
+      </div>
+    )
+  }
+}
+
+const RunbookManagerApp = props => {
   const router = (
     <div>
       <Switch>
@@ -47,6 +99,7 @@ function App () {
       </Switch>
     </div>
   )
+
   return (
     <div className='App'>
       <BrowserRouter>
@@ -73,6 +126,9 @@ const useStyles = makeStyles(theme => ({
   drawerPaper: {
     width: drawerWidth
   },
+  title: {
+    flexGrow: 1
+  },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   content: {
@@ -83,7 +139,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const PermanentDrawerLeft = props => {
-  console.log(props)
   const classes = useStyles()
   const items = [
     {
@@ -107,13 +162,7 @@ const PermanentDrawerLeft = props => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position='fixed' className={classes.appBar}>
-        <Toolbar>
-          <Typography variant='h6' noWrap>
-            Runbook manager
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <RunbookManagerAppBar />
       <Drawer
         className={classes.drawer}
         variant='permanent'
@@ -138,6 +187,23 @@ const PermanentDrawerLeft = props => {
         {props.children}
       </main>
     </div>
+  )
+}
+
+const RunbookManagerAppBar = props => {
+  const userInfo = useSelector(selectUserinfo)
+
+  const classes = useStyles()
+  return (
+    <AppBar position='fixed' className={classes.appBar}>
+      <Toolbar>
+        <Typography class={classes.title} variant='h3'>
+          Runbook manager
+        </Typography>
+        <Typography>Hi {userInfo.preferred_username}</Typography>
+        <Button color='inherit'>Click here to Logout</Button>
+      </Toolbar>
+    </AppBar>
   )
 }
 
