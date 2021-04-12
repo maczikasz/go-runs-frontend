@@ -21,7 +21,7 @@ const OauthCallbackHandler = props => {
       const payload = {
         code: query.get('code')
       }
-      const resp = await fetch('http://localhost:8089/token', {
+      const resp = await fetch(`${process.env.REACT_APP_AUTH_BACKEND}/token`, {
         method: 'POST',
         body: JSON.stringify(payload)
       })
@@ -50,7 +50,7 @@ export const Login = props => {
             render={() => (
               <Grid container>
                 <Grid item>
-                  <Button href='http://localhost:8080/login'>
+                  <Button href={`${process.env.REACT_APP_AUTH_BACKEND}/login`}>
                     Login with OAUTH2
                   </Button>
                 </Grid>

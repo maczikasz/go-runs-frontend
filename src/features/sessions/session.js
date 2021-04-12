@@ -69,7 +69,9 @@ export const Session = props => {
 
   useEffect(() => {
     const getData = async () => {
-      const result = await fetch('http://localhost:8080/sessions/' + sessionId)
+      const result = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/sessions/` + sessionId
+      )
       const json = await result.json()
       setRunbookId(json.runbook.id)
       setStats(json.stats)
@@ -81,7 +83,9 @@ export const Session = props => {
   useEffect(() => {
     if (!runbookId) return
     const getData = async () => {
-      const result = await fetch('http://localhost:8080/runbooks/' + runbookId)
+      const result = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/runbooks/` + runbookId
+      )
       const json = await result.json()
       setSteps(json.steps)
     }

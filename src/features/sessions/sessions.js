@@ -31,24 +31,28 @@ export const ListSessions = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/runbooks')
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/runbooks`
+      )
       const json = await response.json()
 
       setRunbooks(json)
     }
     return fetchData()
-  },[])
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/sessions')
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/sessions`
+      )
       const json = await response.json()
 
       setSessions(json)
     }
 
     return fetchData()
-  },[])
+  }, [])
 
   console.log(sessions)
   console.log(runbooks)

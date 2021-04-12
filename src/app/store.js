@@ -11,10 +11,14 @@ const store = configureStore({
   }
 })
 
+
+
 store.subscribe(
   _.throttle(() => {
     const token = store.getState().login.token
-    if (token) localStorage.setItem('token', JSON.stringify(token))
+    if (token) {
+      localStorage.setItem('token', JSON.stringify(token))
+    }
   }, 1000)
 )
 

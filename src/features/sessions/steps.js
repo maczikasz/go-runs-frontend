@@ -11,7 +11,9 @@ export const SessionStep = props => {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch('http://localhost:8080/details/' + stepId)
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/details/` + stepId
+      )
       const json = await response.json()
       setDetails(json)
     }
@@ -20,12 +22,9 @@ export const SessionStep = props => {
   }, [stepId])
 
   const markStepExecuted = async () => {
-    await fetch(
-      `http://localhost:8080/sessions/${sessionId}/${stepId}`,
-      {
-        method: 'PUT'
-      }
-    )
+    await fetch(`http://localhost:8080/sessions/${sessionId}/${stepId}`, {
+      method: 'PUT'
+    })
     history.push(`/session/${sessionId}`)
   }
 

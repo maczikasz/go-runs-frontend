@@ -40,7 +40,9 @@ export const Rules = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/runbooks')
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/runbooks`
+      )
       const json = await response.json()
       console.log(json)
 
@@ -51,7 +53,9 @@ export const Rules = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/rules')
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/rules`
+      )
       if (response.status === 200) {
         const json = await response.json()
 
@@ -114,7 +118,8 @@ export const Rules = props => {
                     startIcon={<DeleteIcon />}
                     onClick={async () => {
                       await fetch(
-                        'http://localhost:8080/rules/' + r.id,
+                        `${process.env.REACT_APP_RUNBOOK_BACKEND}/rules/` +
+                          r.id,
                         {
                           method: 'DELETE',
                           headers: {
@@ -189,7 +194,8 @@ export const Rules = props => {
                       variant='contained'
                       onClick={async () => {
                         await fetch(
-                          'http://localhost:8080/rules/' + r.id,
+                          `${process.env.REACT_APP_RUNBOOK_BACKEND}/rules/` +
+                            r.id,
                           {
                             method: 'PUT',
                             headers: {
@@ -269,7 +275,7 @@ export const Rules = props => {
                   runbook_id: runbookId
                 }
 
-                await fetch('http://localhost:8080/rules', {
+                await fetch(`${process.env.REACT_APP_RUNBOOK_BACKEND}/rules`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'

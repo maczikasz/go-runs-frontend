@@ -26,7 +26,9 @@ import DeleteIcon from '@material-ui/icons/Delete'
 
 const createStepCard = (step, editCallback, deleteCallback) => {
   const fetchStepDetailsAndEdit = async stepId => {
-    const response = await fetch('http://localhost:8080/details/' + stepId)
+    const response = await fetch(
+      `${process.env.REACT_APP_RUNBOOK_BACKEND}/details/` + stepId
+    )
     const json = await response.json()
 
     editCallback(null, json)
@@ -66,7 +68,9 @@ export const ManageSteps = props => {
   const [steps, setSteps] = useState([])
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/details')
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/details`
+      )
       const json = await response.json()
 
       setSteps(json)
@@ -114,10 +118,13 @@ export const ManageSteps = props => {
         body: JSON.stringify(payload)
       })
     } else {
-      response = await fetch('http://localhost:8080/details', {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      })
+      response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/details`,
+        {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        }
+      )
     }
 
     if (response.code !== 200) {

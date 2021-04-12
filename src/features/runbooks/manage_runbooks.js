@@ -63,7 +63,9 @@ export const ManageRunbooks = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/details')
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/details`
+      )
       const json = await response.json()
 
       setSteps(json)
@@ -73,7 +75,9 @@ export const ManageRunbooks = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:8080/runbooks')
+      const response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/runbooks`
+      )
       const json = await response.json()
       console.log(json)
 
@@ -111,10 +115,13 @@ export const ManageRunbooks = props => {
         }
       )
     } else {
-      response = await fetch('http://localhost:8080/runbooks', {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      })
+      response = await fetch(
+        `${process.env.REACT_APP_RUNBOOK_BACKEND}/runbooks`,
+        {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        }
+      )
     }
     if (response.code !== 200) {
       console.log('Failed to save step')

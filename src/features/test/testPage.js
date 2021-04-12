@@ -111,13 +111,16 @@ export const TestForm = props => {
             }
             console.log(payload)
 
-            const response = await fetch('http://localhost:8080/errors', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(payload)
-            })
+            const response = await fetch(
+              `${process.env.REACT_APP_RUNBOOK_BACKEND}/errors`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+              }
+            )
 
             const sessionId = await response.text()
             setLastSessionId(sessionId)
@@ -135,7 +138,6 @@ export const TestForm = props => {
         {input}
         <br />
         <Button
-        
           fullWidth
           variant='contained'
           color='primary'

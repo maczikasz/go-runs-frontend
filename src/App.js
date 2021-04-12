@@ -30,9 +30,13 @@ import SlideshowIcon from '@material-ui/icons/Slideshow'
 import { Runbooks } from './features/runbooks/runbooks'
 import { Login } from './features/login/login'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectToken } from './features/login/login_slice'
+import { selectToken, unsetToken } from './features/login/login_slice'
 import { Button } from '@material-ui/core'
-import { selectUserinfo, setUserinfo } from './features/login/user_slice'
+import {
+  selectUserinfo,
+  setUserinfo,
+  unsetUserinfo
+} from './features/login/user_slice'
 
 function App () {
   const token = useSelector(selectToken)
@@ -43,11 +47,14 @@ function App () {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const user_resp = await fetch('http://localhost:8089/user', {
-        headers: {
-          Authorization: `Bearer ${token.access_token}`
+      const user_resp = await fetch(
+        `${process.env.REACT_APP_AUTH_BACKEND}/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.access_token}`
+          }
         }
-      })
+      )
 
       const user_data = await user_resp.json()
 
@@ -192,6 +199,18 @@ const PermanentDrawerLeft = props => {
 
 const RunbookManagerAppBar = props => {
   const userInfo = useSelector(selectUserinfo)
+  const dispatch = useDispatch()
+
+  const logout = () => {
+    dispatch(unsetToken)
+    dispatch(unsetUserinfo)
+
+    localStorage.removeItem('token')
+
+    setTimeout(() => {
+      window.location = `${process.env.REACT_APP_AUTH_BACKEND}/logout`
+    }, 500)
+  }
 
   const classes = useStyles()
   return (
@@ -201,7 +220,9 @@ const RunbookManagerAppBar = props => {
           Runbook manager
         </Typography>
         <Typography>Hi {userInfo.preferred_username}</Typography>
-        <Button color='inherit'>Click here to Logout</Button>
+        <Button color='inherit' onClick={logout}>
+          Click here to Logout
+        </Button>
       </Toolbar>
     </AppBar>
   )
